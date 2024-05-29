@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 const bcyrpt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+
 
 
 const studentmodel = new mongoose.Schema({
@@ -45,6 +47,13 @@ studentmodel.methods.comparepassword = function(password) {
     return bcyrpt.compareSync(password, this.password);
 
 }
+
+studentmodel.methods.getjwttoken = function() {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE
+    })
+}
+
 
 const student = mongoose.model("student", studentmodel);
 

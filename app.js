@@ -16,6 +16,18 @@ app.use(express.urlencoded({ extended: false }))
 const logger = require("morgan");
 app.use(logger("tiny"))
 
+//sessions and cookies
+const session = require("express-session")
+const cookieparser = require("cookie-parser")
+    //activate sessions 
+app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: process.env.EXPRESS_SESSION_SECRET
+}));
+//activating cookieparser
+app.use(cookieparser());
+
 
 //Index Routes
 app.use("/", require("./routes/indexRoutes"));

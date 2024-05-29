@@ -1,10 +1,20 @@
 const express = require("express")
 const router = express.Router();
-const { homepage, studentsignup, studentsignin, studentsignout } = require("../controllers/indexController")
+const {
+    homepage,
+    studentsignup,
+    studentsignin,
+    studentsignout,
+    currentuser
+} = require("../controllers/indexController");
+const { isAuthenticated } = require("../middlewares/auth");
 
 
 // Get /
-router.get("/", homepage)
+router.get("/", isAuthenticated, homepage)
+
+//Post / student
+router.post("/student", isAuthenticated, currentuser)
 
 
 // Post /student/signup

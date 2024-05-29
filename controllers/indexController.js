@@ -1,17 +1,26 @@
 const { catchAsyncErrors } = require("../middlewares/catchAsyncError");
 const studentModel = require("../models/student.model");
 const ErrorHandler = require("../utils/errorHandler");
+const { sendtoken } = require("../utils/sendtoken");
 
 exports.homepage = catchAsyncErrors((req, res, next) => {
-    res.json({ message: "Welcome to Homepage" });
+    res.json({ message: "Secure Homepage" });
 
 })
 
-exports.studentsignup = catchAsyncErrors(async(req, res, next) => {
+exports.currentuser = catchAsyncErrors(async(req, res, next) => {
+    const student = await studentModel.findById(req.id).exec();
+    res.json(student)
 
-    const studentcreated = await new studentModel(req.body).save();
-    res.status(201).json(studentcreated);
+})
+
+
+exports.studentsignup = catchAsyncErrors(async(req, res, next) => {
+    const student = await new studentModel(req.body).save();
+    sendtoken(student, 201, res)
+    res.status(201).json(student);
 });
+
 
 
 exports.studentsignin = catchAsyncErrors(async(req, res, next) => {
@@ -23,10 +32,14 @@ exports.studentsignin = catchAsyncErrors(async(req, res, next) => {
 
     const IsMatch = student.comparepassword(req.body.password);
     if (!IsMatch) return next(new ErrorHandler("Wrong credentials", 403));
+
+    sendtoken(student, 201, res)
     res.json(student);
+
 })
 
 
 exports.studentsignout = catchAsyncErrors(async(req, res, next) => {
-    res.json({ message: "Sign out " })
+    res.clearCookie("token");
+    res.status(201).json({ success: true, message: "User Logged out" });
 });
