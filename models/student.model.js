@@ -26,9 +26,12 @@ const studentmodel = new mongoose.Schema({
         //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{3,15}$/,
         //     "Invalid password format."
         // ]
+    },
+    resetpasswordtoken: {
+        type: String,
+        default: "0"
+    },
 
-
-    }
 
 }, { timestamps: true });
 
